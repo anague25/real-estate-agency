@@ -31,9 +31,10 @@ class PropertyFormRequest extends FormRequest
             'price'=>['required','integer','min:0'],
             'city'=>['required','min:5'],
             'address'=>['required','min:5'],
-            'postal_code'=>['required','min:5'],
+            'postal_code'=>['required','min:3'],
             'sold'=>['required','boolean'],
             
         ];
     }
 }
+
