@@ -13,10 +13,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::prefix('admin')->name('admin.')->group(function(){
+$idregex = '[0-9]+';
+$slugRegex = '[0-9a-z\-]+';
+
+
+Route::get('/',[App\Http\Controllers\HomeController::class,'index']);
+
+Route::get('/biens',[App\Http\Controllers\PropertyController::class,'index'])->name('property.index');
+
+Route::get('/biens/{slug}-{property}',[App\Http\Controllers\PropertyController::class,'show'])->name('property.show')->where(['property'=>$idregex,'slug'=>$slugRegex]);
+
+Route::post('/biens/{property}/contact',[App\Http\Controllers\PropertyController::class,'contact'])->name('property.contact')->where(['property'=>$idregex]);
+
+
+Route::get('/login',[App\Http\Controllers\AuthController::class,'login'])->middleware('guest')->name('login');
+Route::post('/login',[App\Http\Controllers\AuthController::class,'doLogin']);
+Route::delete('/logout',[App\Http\Controllers\AuthController::class,'logout'])->middleware('auth')->name('logout');
+
+
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function(){
     Route::resource('property',App\Http\Controllers\Admin\PropertyController::class)->except(['show']);
+    Route::resource('option',App\Http\Controllers\Admin\OptionsController::class)->except(['show']);
 });
